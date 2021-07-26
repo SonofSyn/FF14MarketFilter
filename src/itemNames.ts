@@ -1,4 +1,7 @@
-const itemNames = {
+interface ItemDictionary {
+    [id: string]:string
+}
+export const ItemNames:ItemDictionary = {
     "1": "Gil",
     "2": "Fire Shard",
     "3": "Ice Shard",
