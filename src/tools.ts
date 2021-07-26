@@ -1,3 +1,4 @@
+
 export async function forEachAsync<A, B>(data: A[], fnc: (a: A, ix: number) => Promise<B>, maxParallel: number = 5): Promise<B[]> {
     let parr = data.length < maxParallel ? data.length : maxParallel;
     let workers: Promise<void>[] = [];
