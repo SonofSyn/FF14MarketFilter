@@ -1,7 +1,7 @@
 interface ItemDictionary {
     [id: string]:string
 }
-export const ItemNames:ItemDictionary = {
+export const ItemDictionary:ItemDictionary = {
     "1603": "Viking Sword",
     "1604": "Ash Macuahuitl",
     "1605": "Bronze Spatha",

@@ -1,10 +1,11 @@
 import axios from "axios";
 import fs from "fs";
-import { ItemNames } from "./itemNames";
-import { MarketableItems } from "./marketableItem";
+import { ItemDictionary } from "./resources/itemNames";
+import { MarketableItemIDs } from "./resources/marketableItemIDs";
 import { forEachAsync } from "./tools";
-import { promisify } from 'util'
-const sleep = promisify(setTimeout)
+import { promisify } from "util";
+const asyncWriteFile = promisify(fs.writeFile);
+const sleep = promisify(setTimeout);
 
 interface Listing {
     lastReviewTime: number;
@@ -28,74 +29,78 @@ interface ResponseData {
     // Listings: Listing[]
 }
 
-let requestItem = async (itemIDs: number[], minPriceLimit: number) => {
+let requestItems = async (itemIDs: number[], priceMinimum: number, server: string = "Shiva") => {
     const response = await axios({
         method: "get",
-        url: "https://universalis.app/api/Shiva/" + itemIDs.join(","),
+        url: "https://universalis.app/api/" + server + "/" + itemIDs.join(","),
         responseType: "json",
     });
-    return (await forEachAsync(response.data.items, async (item: any) => {
-        if (minPriceLimit !== 0) {
-            if (item.minPriceHQ !== undefined) {
-                if (item.minPriceHQ <= minPriceLimit)
-                    return undefined;
+    return (
+        await forEachAsync(response.data.items, async (item: any) => {
+            if (priceMinimum !== 0) {
+                if (item.minPriceHQ !== undefined) {
+                    if (item.minPriceHQ <= priceMinimum) return undefined;
+                }
             }
-
-        }
-        let responseItem: ResponseData | undefined = undefined
-        try {
-            responseItem = {
-                id: item.itemID,
-                datum: (new Date(item.lastUploadTime)).toString(),
-                name: ItemNames[item.itemID.toString()],
-                minPriceNQ: item.minPriceNQ,
-                maxPriceNQ: item.maxPriceNQ,
-                minPriceHQ: item.minPriceHQ,
-                maxPriceHQ: item.maxPriceHQ,
-                amountNQListings: item.stackSizeHistogramNQ["1"],
-                amountHQListing: item.stackSizeHistogramHQ["1"],
-                // Listings: listing
-            };
-        } catch (e) { }
-        return responseItem;
-    })).filter(item => item !== undefined);
+            let responseItem: ResponseData | undefined = undefined;
+            try {
+                responseItem = {
+                    id: item.itemID,
+                    datum: new Date(item.lastUploadTime).toString(),
+                    name: ItemDictionary[item.itemID.toString()],
+                    minPriceNQ: item.minPriceNQ,
+                    maxPriceNQ: item.maxPriceNQ,
+                    minPriceHQ: item.minPriceHQ,
+                    maxPriceHQ: item.maxPriceHQ,
+                    amountNQListings: item.stackSizeHistogramNQ["1"],
+                    amountHQListing: item.stackSizeHistogramHQ["1"],
+                    // Listings: listing
+                };
+            } catch (e) {
+                throw new Error("Error while loading Data");
+            }
+            return responseItem;
+        })
+    ).filter((item) => item !== undefined);
 };
 
-let requestMarketableItems = async (minPriceLimit: number = 0, timeout: number = 6000, parallelAmount: number = 2) => {
-    let back: any[] = []
-    let packages = await splitMarketableItems(101)
-    console.log(packages.length)
-    let totalAmount = 0
-    await forEachAsync(packages, async (itemPackage, ix) => {
-        await sleep(timeout)
-        console.log("Run " + ix)
-        let data = await requestItem(itemPackage, minPriceLimit)
-        if (data !== undefined) {
-            totalAmount = totalAmount + data.length
-            back.push(data)
-        }
-    }, parallelAmount)
-    console.log(totalAmount)
-    fs.writeFile("./data/response.json", JSON.stringify(back), () => { });
+let collectMarketData = async (priceMinimum: number = 0, timeout: number = 3000, parallelRequestAmount: number = 1) => {
+    let marketItemData: any[] = [];
+    let idFragments = await splitIntoFragments(101);
+    console.log(idFragments.length);
+    let totalAmount = 0;
+    await forEachAsync(
+        idFragments,
+        async (ids, ix) => {
+            await sleep(timeout);
+            console.log("Run " + ix);
+            let items = await requestItems(ids, priceMinimum);
+            if (items !== undefined) {
+                totalAmount = totalAmount + items.length;
+                marketItemData.push(items);
+            }
+        },
+        parallelRequestAmount
+    );
+    console.log(totalAmount);
+    await asyncWriteFile("./data/response.json", JSON.stringify(marketItemData));
 };
 
-
-let splitMarketableItems = async (packLength: number) => {
-    let back: number[][] = []
-    let temp: number[] = []
-    await forEachAsync(MarketableItems, async (item) => {
-        if (temp.length === packLength) {
-            back.push(temp)
-            temp = []
+let splitIntoFragments = async (fragmentSize: number) => {
+    let allFragments: number[][] = [];
+    let tempFragments: number[] = [];
+    await forEachAsync(MarketableItemIDs, async (item) => {
+        if (tempFragments.length === fragmentSize) {
+            allFragments.push(tempFragments);
+            tempFragments = [];
         }
-        temp.push(item)
-    })
-    if (temp.length > 0) back.push(temp)
-    return back
-}
-
+        tempFragments.push(item);
+    });
+    if (tempFragments.length > 0) allFragments.push(tempFragments);
+    return allFragments;
+};
 
 (async () => {
-    await requestMarketableItems(80000);
+    await collectMarketData(80000);
     // console.log(new Date(1626610282649))
 })();
