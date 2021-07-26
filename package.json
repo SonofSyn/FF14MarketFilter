@@ -1,0 +1,26 @@
+{
+  "name": "ff14marketfilter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node ./dist/main",
+    "watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SonofSyn/FF14MarketFilter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SonofSyn/FF14MarketFilter/issues"
+  },
+  "homepage": "https://github.com/SonofSyn/FF14MarketFilter#readme",
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}
