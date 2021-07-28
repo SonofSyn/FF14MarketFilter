@@ -1,7 +1,6 @@
-interface ItemDictionary {
-    [id: string]:string
-}
-export const ItemDictionary:ItemDictionary = {
+import { ItemDictionary } from "../shared/interface";
+
+export const ItemDictionaryENG:ItemDictionary = {
     "1603": "Viking Sword",
     "1604": "Ash Macuahuitl",
     "1605": "Bronze Spatha",
