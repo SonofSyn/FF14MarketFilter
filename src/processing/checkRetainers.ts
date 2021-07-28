@@ -37,4 +37,23 @@ export let checkRetainerUndercut = async (listing: ListingData, retainerorder: O
     return foundUndercuts;
 };
 
-export let checkRetainers = async () => {};
+export let checkRetainers = async (
+    retainers: string[],
+    listingData: ListingData[]
+): Promise<
+    {
+        retainerOrder: Order;
+        undercuts: Order[];
+    }[]
+> => {
+    let retainerListings = await checkListingForRetainers(retainers, listingData);
+    let undercuts: { retainerOrder: Order; undercuts: Order[] }[] = [];
+
+    await forEachAsync(retainerListings, async (listing) => {
+        let order = await checkForRetainerOrder(listing, retainers);
+        if (order !== undefined) {
+            undercuts.push({ retainerOrder: order, undercuts: await checkRetainerUndercut(listing, order) });
+        }
+    });
+    return undercuts;
+};
