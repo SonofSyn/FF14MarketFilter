@@ -1,14 +1,15 @@
-import { collectItemNameData } from "./requests/collector";
+import { collectItemData, collectItemNamesDE } from "./requests/collector";
 import { MarketableItemIDs } from "./resources/marketableItemIDs";
 import { selectItemMetrics, selectListingData, selectPriceFilteredData } from "./processing/selector";
 import { asyncReadFile, asyncWriteFile } from "./shared/tools";
 import { ResponseData } from "./shared/interface";
+import { requestItemNameXIVapi } from "./requests/client";
 
 (async () => {
     // Request data with https
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     console.time("Start");
-    let marketItemData = await collectItemNameData("Shiva", MarketableItemIDs, 3000, 1);
+    let marketItemData = await collectItemData("Shiva", MarketableItemIDs, 3000, 1);
     await asyncWriteFile("./export/response.json", JSON.stringify(marketItemData));
     console.timeEnd("Start");
 
@@ -26,4 +27,9 @@ import { ResponseData } from "./shared/interface";
     let listingData = await selectListingData(marketItemData);
     await asyncWriteFile("./export/compiledData/listings.json", JSON.stringify(listingData));
     console.time("End");
+
+    // Grab all german names of marketableItems
+    //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+    // let itemNameData = await collectItemNamesDE(MarketableItemIDs, 2000, 5);
+    // await asyncWriteFile("./export/compiledData/itemNamesDE.json", JSON.stringify(itemNameData));
 })();

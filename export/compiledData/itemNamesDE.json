@@ -1,6 +1,4 @@
-import { ItemDictionary } from "../shared/interface";
-
-export const ItemDictionaryGER: ItemDictionary = {
+{
     "1603": "Wikingerschwert",
     "1604": "Eschen-Macuahuitl",
     "1605": "Bronze-Spatha",
@@ -12412,5 +12410,5 @@ export const ItemDictionaryGER: ItemDictionary = {
     "33903": "Modifizierte Zelotupia",
     "33904": "Modifiziertes Eulabeia",
     "33905": "Notenrolle von „Skyrise“",
-    "33907": "Notenrolle von „The Sound of the End: 8bit“",
-};
+    "33907": "Notenrolle von „The Sound of the End: 8bit“"
+}

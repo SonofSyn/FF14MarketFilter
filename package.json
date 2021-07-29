@@ -2,7 +2,12 @@
   "name": "ff14marketfilter",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "./dist/main",
+  "types": "./dist/lib.d.ts",
+  "module": "./dist/lib.js",
+  "files": [
+      "dist"
+  ],
   "scripts": {
     "start": "node ./dist/main",
     "watch": "tsc --watch"
