@@ -1,4 +1,4 @@
-import { collectItemData } from "./requests/collector";
+import { collectItemNameData } from "./requests/collector";
 import { MarketableItemIDs } from "./resources/marketableItemIDs";
 import { selectItemMetrics, selectListingData, selectPriceFilteredData } from "./processing/selector";
 import { asyncReadFile, asyncWriteFile } from "./shared/tools";
@@ -8,7 +8,7 @@ import { ResponseData } from "./shared/interface";
     // Request data with https
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     console.time("Start");
-    let marketItemData = await collectItemData("Shiva", MarketableItemIDs, 3000, 1);
+    let marketItemData = await collectItemNameData("Shiva", MarketableItemIDs, 3000, 1);
     await asyncWriteFile("./export/response.json", JSON.stringify(marketItemData));
     console.timeEnd("Start");
 

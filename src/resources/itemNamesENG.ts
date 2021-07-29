@@ -1,6 +1,6 @@
 import { ItemDictionary } from "../shared/interface";
 
-export const ItemDictionaryENG:ItemDictionary = {
+export const ItemDictionaryENG: ItemDictionary = {
     "1603": "Viking Sword",
     "1604": "Ash Macuahuitl",
     "1605": "Bronze Spatha",
@@ -30448,5 +30448,5 @@ export const ItemDictionaryENG:ItemDictionary = {
     "33150": "Wild Sage",
     "33151": "Countess Tea Leaves",
     "33152": "Dacite",
-    "33153": "Rhodolite"
-}
+    "33153": "Rhodolite",
+};
