@@ -1,7 +1,7 @@
 export interface Order {
     lastReviewTime: number;
     pricePerUnit: number;
-    totalPrice: number;
+    total: number;
     quantity: number;
     hq: boolean;
     retainerName: string;

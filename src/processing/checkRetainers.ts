@@ -1,42 +1,64 @@
 import { ListingData, Order } from "../shared/interface";
 import { forEachAsync } from "../shared/tools";
-
+/**
+ * Checks all given Listing for the given retainer names if included returns all arrays containing retainers and the order of the retainer
+ *
+ * @param {string[]} retainers
+ * @param {ListingData[]} listingData
+ * @return {*}  {Promise<ListingData[]>}
+ */
 export let checkListingForRetainers = async (
     retainers: string[],
     listingData: ListingData[]
-): Promise<ListingData[]> => {
-    let listings: ListingData[] = [];
+): Promise<{ listing: ListingData; retainerOrder: Order }[]> => {
+    let listings: { listing: ListingData; retainerOrder: Order }[] = [];
     await forEachAsync(listingData, async (listing) => {
         await forEachAsync(listing.orders, async (order) => {
-            if (retainers.indexOf(order.retainerName) !== -1) {
-                listings.push(listing);
+            if (retainers.includes(order.retainerName)) {
+                listings.push({ listing: listing, retainerOrder: order });
             }
         });
     });
     return listings;
 };
 
-export let checkForRetainerOrder = async (listing: ListingData, retainers: string[]): Promise<Order | undefined> => {
-    let order: (Order | undefined)[] = await forEachAsync(listing.orders, async (order) => {
-        let ix = retainers.indexOf(order.retainerName);
-        if (ix !== -1) {
-            return (order = Object.assign({}, order));
-        }
-    });
-    if (order.length === 0) throw Error("No Retainer found.");
-    return order[0];
-};
-
-export let checkRetainerUndercut = async (listing: ListingData, retainerorder: Order) => {
+/**
+ * Checks in listing if the retainer was undercut by someone else
+ *
+ * @param {ListingData} listing
+ * @param {Order} retainerorder
+ * @return {*}
+ */
+export let checkRetainerUndercut = async (
+    listing: ListingData,
+    retainerorder: Order,
+    retainers: string[]
+): Promise<Order[]> => {
     let foundUndercuts: Order[] = [];
     await forEachAsync(listing.orders, async (order) => {
-        if (order.hq === retainerorder.hq) {
-            if (order.totalPrice < retainerorder.totalPrice) foundUndercuts.push(order);
+        if (
+            order.hq === retainerorder.hq &&
+            order.total < retainerorder.total &&
+            !retainers.includes(order.retainerName)
+        ) {
+            foundUndercuts.push(order);
         }
     });
     return foundUndercuts;
 };
 
+/**
+ * Checks whether any retainers are undercut and returns all undercuts and the retainers order
+ *
+ * @param {string[]} retainers
+ * @param {ListingData[]} listingData
+ * @return {*}  {Promise<
+ *     {
+ *         retainerOrder: Order;
+ *         undercuts: Order[];
+ *     }[]
+ * >}
+ */
 export let checkRetainers = async (
     retainers: string[],
     listingData: ListingData[]
@@ -50,10 +72,10 @@ export let checkRetainers = async (
     let undercuts: { retainerOrder: Order; undercuts: Order[] }[] = [];
 
     await forEachAsync(retainerListings, async (listing) => {
-        let order = await checkForRetainerOrder(listing, retainers);
-        if (order !== undefined) {
-            undercuts.push({ retainerOrder: order, undercuts: await checkRetainerUndercut(listing, order) });
-        }
+        undercuts.push({
+            retainerOrder: listing.retainerOrder,
+            undercuts: await checkRetainerUndercut(listing.listing, listing.retainerOrder, retainers),
+        });
     });
     return undercuts;
 };

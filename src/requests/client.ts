@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Order, ResponseData, Server } from "../shared/interface";
 import { ItemDictionaryENG } from "../resources/itemNamesENG";
-import { asyncWriteFile, forEachAsync } from "../shared/tools";
+import { forEachAsync } from "../shared/tools";
 /**
  * Sends and https request for up to 101 given items
  *
@@ -16,32 +16,22 @@ export let requestItems = async (itemIDs: number[], server: Server): Promise<Res
         responseType: "json",
     });
     return await forEachAsync(response.data.items, async (item: any) => {
-        let orders: Order[] = await forEachAsync(
-            item.listings,
-            async (listing: {
-                lastReviewTime: number;
-                pricePerUnit: number;
-                total: number;
-                quantity: number;
-                hq: boolean;
-                retainerName: string;
-            }) => {
-                return {
-                    lastReviewTime: listing.lastReviewTime,
-                    pricePerUnit: listing.pricePerUnit,
-                    totalPrice: listing.total,
-                    quantity: listing.quantity,
-                    hq: listing.hq,
-                    retainerName: listing.retainerName,
-                };
-            }
-        );
+        let orders: Order[] = await forEachAsync(item.listings, async (order: Order) => {
+            return {
+                lastReviewTime: order.lastReviewTime,
+                pricePerUnit: order.pricePerUnit,
+                total: order.total,
+                quantity: order.quantity,
+                hq: order.hq,
+                retainerName: order.retainerName,
+            };
+        });
 
-        let amountNQListings = 0;
-        let amountHQListing = 0;
+        let amountNQOrders = 0;
+        let amountHQOrders = 0;
         try {
-            amountNQListings = item.stackSizeHistogramNQ["1"];
-            amountHQListing = item.stackSizeHistogramHQ["1"];
+            amountNQOrders = item.stackSizeHistogramNQ["1"];
+            amountHQOrders = item.stackSizeHistogramHQ["1"];
         } catch (e) {
             throw new Error("Error while trying to read the ");
         }
@@ -54,8 +44,8 @@ export let requestItems = async (itemIDs: number[], server: Server): Promise<Res
             maxPriceNQ: item.maxPriceNQ,
             minPriceHQ: item.minPriceHQ,
             maxPriceHQ: item.maxPriceHQ,
-            amountNQListings: amountNQListings,
-            amountHQListing: amountHQListing,
+            amountNQListings: amountNQOrders,
+            amountHQListing: amountHQOrders,
             orders: orders,
         };
 
