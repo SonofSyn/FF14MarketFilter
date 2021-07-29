@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Order, ResponseData, Server } from "../shared/interface";
-import { ItemDictionaryENG } from "../resources/itemNamesENG";
+import { ItemDictionaryGER } from "../resources/itemNamesGER";
 import { asyncWriteFile, forEachAsync } from "../shared/tools";
 /** universalis
  * Sends and https request for up to 101 given items
@@ -34,13 +34,13 @@ export let requestItemsUniversalis = async (itemIDs: number[], server: Server): 
             amountNQOrders = item.stackSizeHistogramNQ["1"];
             amountHQOrders = item.stackSizeHistogramHQ["1"];
         } catch (e) {
-            throw new Error("Error while trying to read the ");
+            console.log("Error while trying to read the Stacksize");
         }
 
         let responseItem = {
             id: item.itemID,
             date: new Date(item.lastUploadTime).toString(),
-            name: ItemDictionaryENG[item.itemID.toString()],
+            name: ItemDictionaryGER[item.itemID.toString()],
             minPriceNQ: item.minPriceNQ,
             maxPriceNQ: item.maxPriceNQ,
             minPriceHQ: item.minPriceHQ,

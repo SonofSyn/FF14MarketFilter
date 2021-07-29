@@ -4,25 +4,26 @@ import { selectItemMetrics, selectListingData, selectPriceFilteredData } from ".
 import { asyncReadFile, asyncWriteFile } from "./shared/tools";
 import { ResponseData } from "./shared/interface";
 import { requestItemNameXIVapi } from "./requests/client";
+import { MarketableItemIDsReduced } from "./resources/marketableItemsReduced";
 
 (async () => {
     // Request data with https
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     console.time("Start");
-    let marketItemData = await collectItemData("Shiva", MarketableItemIDs, 3000, 1);
+    let marketItemData = await collectItemData("Shiva", MarketableItemIDsReduced, 2000, 1);
     await asyncWriteFile("./export/response.json", JSON.stringify(marketItemData));
     console.timeEnd("Start");
 
     // Use data from last request
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-    // let marketItemData: ResponseData[][] = JSON.parse((await asyncReadFile("./data/response.json")).toString());
+    // let marketItemData: ResponseData[][] = JSON.parse((await asyncReadFile("./export/response.json")).toString());
 
     // Selects certain infos of the entire dataset and saves them in smaller json files
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     console.time("End");
-    let priceFilteredData = await selectPriceFilteredData(marketItemData, 8000);
+    let priceFilteredData = await selectPriceFilteredData(marketItemData, 80000);
     await asyncWriteFile("./export/compiledData/filtered.json", JSON.stringify(priceFilteredData));
-    let metricData = await selectItemMetrics(marketItemData);
+    let metricData = await selectItemMetrics(marketItemData, 80000);
     await asyncWriteFile("./export/compiledData/metrics.json", JSON.stringify(metricData));
     let listingData = await selectListingData(marketItemData);
     await asyncWriteFile("./export/compiledData/listings.json", JSON.stringify(listingData));

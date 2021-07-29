@@ -6,10 +6,13 @@ import { forEachAsync } from "../shared/tools";
  * @param {ResponseData[][]} data
  * @return {*}  {Promise<ItemMetrics[]>}
  */
-export let selectItemMetrics = async (data: ResponseData[][]): Promise<ItemMetrics[]> => {
+export let selectItemMetrics = async (data: ResponseData[][], priceMinimum: number): Promise<ItemMetrics[]> => {
     let metricData: ItemMetrics[] = [];
     await forEachAsync(data, async (set) => {
         await forEachAsync(set, async (item) => {
+            if (item.minPriceHQ !== undefined) {
+                if (item.minPriceHQ <= priceMinimum) return;
+            }
             metricData.push({
                 id: item.id,
                 date: item.date,
