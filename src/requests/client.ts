@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Order, ResponseData, Server } from "../shared/interface";
 import { ItemDictionaryENG } from "../resources/itemNamesENG";
-import { forEachAsync } from "../shared/tools";
+import { asyncWriteFile, forEachAsync } from "../shared/tools";
 /**
  * Sends and https request for up to 101 given items
  *
@@ -15,6 +15,7 @@ export let requestItems = async (itemIDs: number[], server: Server): Promise<Res
         url: "https://universalis.app/api/" + server + "/" + itemIDs.join(","),
         responseType: "json",
     });
+    // await asyncWriteFile("./export/answer.json", JSON.stringify(response.data));
     return await forEachAsync(response.data.items, async (item: any) => {
         let orders: Order[] = await forEachAsync(item.listings, async (order: Order) => {
             return {

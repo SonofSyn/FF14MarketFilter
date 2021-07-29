@@ -9,7 +9,7 @@ import { ResponseData } from "./shared/interface";
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     console.time("Start");
     let marketItemData = await collectItemData("Shiva", MarketableItemIDs, 3000, 1);
-    await asyncWriteFile("./data/response.json", JSON.stringify(marketItemData));
+    await asyncWriteFile("./export/response.json", JSON.stringify(marketItemData));
     console.timeEnd("Start");
 
     // Use data from last request
@@ -20,10 +20,10 @@ import { ResponseData } from "./shared/interface";
     //_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     console.time("End");
     let priceFilteredData = await selectPriceFilteredData(marketItemData, 8000);
-    await asyncWriteFile("./data/compiledData/filtered.json", JSON.stringify(priceFilteredData));
+    await asyncWriteFile("./export/compiledData/filtered.json", JSON.stringify(priceFilteredData));
     let metricData = await selectItemMetrics(marketItemData);
-    await asyncWriteFile("./data/compiledData/metrics.json", JSON.stringify(metricData));
+    await asyncWriteFile("./export/compiledData/metrics.json", JSON.stringify(metricData));
     let listingData = await selectListingData(marketItemData);
-    await asyncWriteFile("./data/compiledData/listings.json", JSON.stringify(listingData));
+    await asyncWriteFile("./export/compiledData/listings.json", JSON.stringify(listingData));
     console.time("End");
 })();
