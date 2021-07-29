@@ -19,7 +19,7 @@ export let requestItemsUniversalis = async (itemIDs: number[], server: Server): 
     return await forEachAsync(response.data.items, async (item: any) => {
         let orders: Order[] = await forEachAsync(item.listings, async (order: Order) => {
             return {
-                lastReviewTime: order.lastReviewTime,
+                lastReviewTime: new Date(order.lastReviewTime).toString(),
                 pricePerUnit: order.pricePerUnit,
                 total: order.total,
                 quantity: order.quantity,

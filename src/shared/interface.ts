@@ -1,5 +1,5 @@
 export interface Order {
-    lastReviewTime: number;
+    lastReviewTime: string;
     pricePerUnit: number;
     total: number;
     quantity: number;

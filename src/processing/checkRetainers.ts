@@ -64,18 +64,20 @@ export let checkRetainers = async (
     listingData: ListingData[]
 ): Promise<
     {
+        name: string;
         retainerOrder: Order;
         undercuts: Order[];
     }[]
 > => {
     let retainerListings = await checkListingForRetainers(retainers, listingData);
-    let undercuts: { retainerOrder: Order; undercuts: Order[] }[] = [];
+    let undercuts: { name: string; retainerOrder: Order; undercuts: Order[] }[] = [];
 
     await forEachAsync(retainerListings, async (listing) => {
         undercuts.push({
+            name: listing.listing.name,
             retainerOrder: listing.retainerOrder,
             undercuts: await checkRetainerUndercut(listing.listing, listing.retainerOrder, retainers),
         });
     });
-    return undercuts;
+    return undercuts.filter((cuts) => cuts.undercuts.length !== 0);
 };
