@@ -1,2 +1,2 @@
-export const retainersK: string[] = ["Wilson-", "Brundhilde"];
-export const retainersN: string[] = ["Artreus", "Aerith-Mox"];
+export const retainersK: string[] = ["Wilson-", "Brunnenhilde"];
+export const retainersN: string[] = ["Artreus", "Aerith-mox"];
