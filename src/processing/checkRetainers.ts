@@ -7,7 +7,7 @@ import { forEachAsync } from "../shared/tools";
  * @param {ListingData[]} listingData
  * @return {*}  {Promise<ListingData[]>}
  */
-export let checkListingForRetainers = async (
+export let checkListingsForRetainers = async (
     retainers: string[],
     listingData: ListingData[]
 ): Promise<{ listing: ListingData; retainerOrder: Order }[]> => {
@@ -29,7 +29,7 @@ export let checkListingForRetainers = async (
  * @param {Order} retainerorder
  * @return {*}
  */
-export let checkRetainerUndercut = async (
+export let checkRetainerUndercuts = async (
     listing: ListingData,
     retainerorder: Order,
     retainers: string[]
@@ -69,14 +69,14 @@ export let checkRetainers = async (
         undercuts: Order[];
     }[]
 > => {
-    let retainerListings = await checkListingForRetainers(retainers, listingData);
+    let retainerListings = await checkListingsForRetainers(retainers, listingData);
     let undercuts: { name: string; retainerOrder: Order; undercuts: Order[] }[] = [];
 
     await forEachAsync(retainerListings, async (listing) => {
         undercuts.push({
             name: listing.listing.name,
             retainerOrder: listing.retainerOrder,
-            undercuts: await checkRetainerUndercut(listing.listing, listing.retainerOrder, retainers),
+            undercuts: await checkRetainerUndercuts(listing.listing, listing.retainerOrder, retainers),
         });
     });
     return undercuts.filter((cuts) => cuts.undercuts.length !== 0);

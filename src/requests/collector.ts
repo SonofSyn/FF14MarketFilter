@@ -73,7 +73,7 @@ export let collectItemNamesDE = async (
                 back[translation.id + ""] = translation.name;
             } catch (e) {
                 console.log("Error");
-                await asyncWriteFile("./export/compiledData/itemNamesDE1.json", JSON.stringify(back));
+                await asyncWriteFile("./export/error/itemNamesDE1.json", JSON.stringify(back));
             }
         },
         parallelRequestAmount
