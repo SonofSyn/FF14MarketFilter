@@ -17,11 +17,12 @@ export let collectItemData = async (
     server: Server,
     ids: number[],
     timeout: number = 3000,
-    parallelRequestAmount: number = 1
+    parallelRequestAmount: number = 1,
+    maxPackageSize: number = 101
 ): Promise<ResponseData[][]> => {
     let itemData: ResponseData[][] = [];
     // 101 is the max package size which can be requested by http request
-    let idPackages = await splitIntoPackages(101, ids);
+    let idPackages = await splitIntoPackages(maxPackageSize, ids);
     console.log(idPackages.length);
     let totalAmount = 0;
     await forEachAsync(
@@ -59,6 +60,7 @@ export let collectItemData = async (
 export let collectItemNamesDE = async (
     itemIDs: number[],
     timeout: number,
+    writePath: string = "./export/error/itemNamesDE1.json",
     parallelRequestAmount: number = 3
 ): Promise<ItemDictionary> => {
     let back: ItemDictionary = {};
@@ -73,7 +75,7 @@ export let collectItemNamesDE = async (
                 back[translation.id + ""] = translation.name;
             } catch (e) {
                 console.log("Error");
-                await asyncWriteFile("./export/error/itemNamesDE1.json", JSON.stringify(back));
+                await asyncWriteFile(writePath, JSON.stringify(back));
             }
         },
         parallelRequestAmount

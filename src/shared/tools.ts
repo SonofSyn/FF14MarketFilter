@@ -1,5 +1,5 @@
 import { promisify } from "util";
-import fs from "fs";
+import * as fs from "fs";
 export const asyncWriteFile = promisify(fs.writeFile);
 export const asyncReadFile = promisify(fs.readFile);
 export const sleep = promisify(setTimeout);
