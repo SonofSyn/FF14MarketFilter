@@ -40,6 +40,7 @@ export let collectItemData = async (
                         // console.log(item);
                     }
                 });
+                await asyncWriteFile("./export/test123.json", JSON.stringify(itemData), { flag: "a" });
                 itemData.push(data);
             }
         },

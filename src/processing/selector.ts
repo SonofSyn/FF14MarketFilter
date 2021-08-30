@@ -49,34 +49,3 @@ export let selectListingData = async (data: ResponseData[][]): Promise<ListingDa
     });
     return listingData;
 };
-
-/**
- * Select only Items which are worth enough to sell
- *
- * @param {ResponseData[][]} data
- * @param {number} priceMinimum
- * @return {*}  {Promise<ResponseData[]>}
- */
-export let selectPriceFilteredData = async (data: ResponseData[][], priceMinimum: number): Promise<ResponseData[]> => {
-    let responseData: ResponseData[] = [];
-    await forEachAsync(data, async (set) => {
-        await forEachAsync(set, async (item) => {
-            if (item.minPriceHQ !== undefined) {
-                if (item.minPriceHQ <= priceMinimum) return;
-            }
-            responseData.push({
-                id: item.id,
-                date: item.date,
-                name: item.name,
-                minPriceNQ: item.minPriceNQ,
-                maxPriceNQ: item.maxPriceNQ,
-                minPriceHQ: item.minPriceHQ,
-                maxPriceHQ: item.maxPriceHQ,
-                amountNQListings: item.amountNQListings,
-                amountHQListing: item.amountHQListing,
-                orders: item.orders,
-            });
-        });
-    });
-    return responseData;
-};

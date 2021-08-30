@@ -39,6 +39,12 @@ export interface ResponseData {
     orders: Order[];
 }
 
+export interface Retainer {
+    name: string;
+    retainerOrder: Order;
+    undercuts: Order[];
+}
+
 export type Server =
     | "Cerberus"
     | "Louisoix"

@@ -5,6 +5,7 @@ export * from "./processing/selector";
 export * from "./resources/itemNamesENG";
 export * from "./resources/itemNamesGER";
 export * from "./resources/marketableItemIDs";
+export * from "./resources/marketableItemsReduced";
 export * from "./resources/retainerNames";
 export * from "./shared/interface";
 export * from "./shared/tools";

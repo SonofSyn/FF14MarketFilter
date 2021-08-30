@@ -1,4 +1,4 @@
-import { ListingData, Order } from "../shared/interface";
+import { ListingData, Order, Retainer } from "../shared/interface";
 import { forEachAsync } from "../shared/tools";
 /**
  * Checks all given Listing for the given retainer names if included returns all arrays containing retainers and the order of the retainer
@@ -59,16 +59,7 @@ export let checkRetainerUndercuts = async (
  *     }[]
  * >}
  */
-export let checkRetainers = async (
-    retainers: string[],
-    listingData: ListingData[]
-): Promise<
-    {
-        name: string;
-        retainerOrder: Order;
-        undercuts: Order[];
-    }[]
-> => {
+export let checkRetainers = async (retainers: string[], listingData: ListingData[]): Promise<Retainer[]> => {
     let retainerListings = await checkListingsForRetainers(retainers, listingData);
     let undercuts: { name: string; retainerOrder: Order; undercuts: Order[] }[] = [];
 
