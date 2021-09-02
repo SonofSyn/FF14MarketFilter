@@ -1,5 +1,5 @@
-import { requestItemsUniversalis } from "./client";
-import { ResponseData, Server } from "../shared/interface";
+import { requestItemImageXIVapi, requestItemsUniversalis, requestItemXIVapi } from "./client";
+import { ItemExtrasDictionary, ResponseData, Server } from "../shared/interface";
 import { splitIntoPackages, forEachAsync, sleep, asyncWriteFile } from "../shared/tools";
 import { requestItemNameXIVapi } from "../requests/client";
 import { ItemDictionary } from "../shared/interface";
@@ -82,4 +82,63 @@ export let collectItemNamesDE = async (
         parallelRequestAmount
     );
     return back;
+};
+
+/**
+ * Collect all german Itemnames for given itemids
+ *
+ * @param {number[]} itemIDs
+ * @param {number} timeout
+ * @param {number} [parallelRequestAmount=3]
+ * @return {*}  {Promise<ItemDictionary>}
+ */
+export let collectItemExtras = async (
+    itemIDs: number[],
+    timeout: number,
+    parallelRequestAmount: number = 3,
+    writePath: string = "./export/error/itemExtras.json"
+): Promise<ItemExtrasDictionary> => {
+    let back: ItemExtrasDictionary = {};
+    await forEachAsync(
+        itemIDs,
+        async (id, ix) => {
+            console.log("Run " + ix);
+            await sleep(timeout);
+            try {
+                let items = await requestItemXIVapi(id);
+                back[items.id + ""] = {
+                    name: items.name,
+                    icon: items.icon,
+                    level: items.level,
+                    crafter: items.crafter,
+                };
+            } catch (e) {
+                console.log("Error");
+                await asyncWriteFile(writePath, JSON.stringify(back));
+            }
+        },
+        parallelRequestAmount
+    );
+    return back;
+};
+
+export let collectItemImages = async (
+    imgPath: { path: string; name: string }[],
+    timeout: number,
+    parallelRequestAmount: number = 3
+): Promise<void> => {
+    await forEachAsync(
+        imgPath,
+        async (data, ix) => {
+            console.log("Run " + ix);
+            await sleep(timeout);
+            try {
+                let item = await requestItemImageXIVapi(data.path);
+                await asyncWriteFile("./export/images/" + data.name + ".png", item);
+            } catch (e) {
+                console.log("Error");
+            }
+        },
+        parallelRequestAmount
+    );
 };

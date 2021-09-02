@@ -70,3 +70,43 @@ export let requestItemNameXIVapi = async (itemID: number): Promise<{ name: strin
     // await asyncWriteFile("./export/answerxiv.json", JSON.stringify(response.data));
     return { name: response.data.Name_de, id: itemID };
 };
+
+/** xiv
+ * Sends and https request for german name of given id
+ *
+ * @param {number[]} itemIDs
+ * @param {Server} server
+ * @return {*}  {Promise<(ResponseData)[]>}
+ */
+export let requestItemXIVapi = async (
+    itemID: number
+): Promise<{ id: number; name: string; icon: string; level: number; crafter: string }> => {
+    const response = await axios({
+        method: "get",
+        url: "https://xivapi.com/item/" + itemID,
+        responseType: "json",
+    });
+    // await asyncWriteFile("./export/answerxiv.json", JSON.stringify(response.data));
+    let crafter = "";
+    try {
+        crafter = response.data.ClassJobRepair.Name;
+    } catch (e) {
+        console.log("Error No Repair");
+    }
+    return {
+        id: itemID,
+        name: response.data.Name_de,
+        icon: response.data.IconHD,
+        level: response.data.LevelItem,
+        crafter: crafter,
+    };
+};
+
+export let requestItemImageXIVapi = async (link: string) => {
+    const response = await axios({
+        method: "get",
+        url: "https://xivapi.com" + link,
+        responseType: "arraybuffer",
+    });
+    return Buffer.from(response.data, "base64");
+};

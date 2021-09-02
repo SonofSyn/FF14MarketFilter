@@ -1,9 +1,9 @@
-import { collectItemData, collectItemNamesDE } from "./requests/collector";
+import { collectItemData, collectItemExtras, collectItemNamesDE } from "./requests/collector";
 import { MarketableItemIDs } from "./resources/marketableItemIDs";
 import { selectItemMetrics, selectListingData } from "./processing/selector";
 import { asyncReadFile, asyncWriteFile } from "./shared/tools";
 import { ItemMetrics, ListingData, ResponseData } from "./shared/interface";
-import { requestItemNameXIVapi } from "./requests/client";
+import { requestItemImageXIVapi, requestItemNameXIVapi } from "./requests/client";
 import { MarketableItemIDsReduced } from "./resources/marketableItemsReduced";
 import { checkRetainers } from "./processing/checkRetainers";
 import { retainersK, retainersN } from "./resources/retainerNames";
@@ -31,6 +31,10 @@ import { retainersK, retainersN } from "./resources/retainerNames";
     // _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     // let itemNameData = await collectItemNamesDE(MarketableItemIDs, 2000, 5);
     // await asyncWriteFile("./export/compiledData/itemNamesDE.json", JSON.stringify(itemNameData));
+    // Grab all itemExtras
+    // _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+    let itemExtraData = await collectItemExtras(MarketableItemIDsReduced, 2000, 5);
+    await asyncWriteFile("./export/compiledData/itemExtras.json", JSON.stringify(itemExtraData));
     // Load Data
     // _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     // let listingItemData: ListingData[] = JSON.parse(
@@ -45,4 +49,6 @@ import { retainersK, retainersN } from "./resources/retainerNames";
     // await asyncWriteFile("./export/processed/retainers.json", JSON.stringify(retainerData));
     // console.log(retainerData);
     // console.log(retainerData.length);
+    // let pictureBuffer = await requestItemImageXIVapi("/i/050000/050104_hr1.png");
+    // await asyncWriteFile("./export/test.png", pictureBuffer);
 })();

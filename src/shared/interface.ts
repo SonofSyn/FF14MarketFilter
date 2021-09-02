@@ -63,3 +63,7 @@ export type Server =
 export interface ItemDictionary {
     [id: string]: string;
 }
+
+export interface ItemExtrasDictionary {
+    [id: string]: { name: string; icon: string; level: number; crafter: string };
+}
