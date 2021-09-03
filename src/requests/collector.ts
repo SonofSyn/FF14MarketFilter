@@ -123,18 +123,18 @@ export let collectItemExtras = async (
 };
 
 export let collectItemImages = async (
-    imgPath: { path: string; name: string }[],
+    extraInfo: ItemExtrasDictionary,
     timeout: number,
     parallelRequestAmount: number = 3
 ): Promise<void> => {
     await forEachAsync(
-        imgPath,
-        async (data, ix) => {
+        Object.keys(extraInfo),
+        async (key, ix) => {
             console.log("Run " + ix);
             await sleep(timeout);
             try {
-                let item = await requestItemImageXIVapi(data.path);
-                await asyncWriteFile("./export/images/" + data.name + ".png", item);
+                let item = await requestItemImageXIVapi(extraInfo[key].icon);
+                await asyncWriteFile("./export/images/" + extraInfo[key].name + ".png", item);
             } catch (e) {
                 console.log("Error");
             }

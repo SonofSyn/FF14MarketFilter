@@ -1,0 +1,20 @@
+{
+    "1603": {
+        "name": "Wikingerschwert",
+        "icon": "/i/030000/030491_hr1.png",
+        "level": 7,
+        "crafter": "blacksmith"
+    },
+    "1604": {
+        "name": "Eschen-Macuahuitl",
+        "icon": "/i/030000/030417_hr1.png",
+        "level": 10,
+        "crafter": "carpenter"
+    },
+    "1605": {
+        "name": "Bronze-Spatha",
+        "icon": "/i/030000/030401_hr1.png",
+        "level": 13,
+        "crafter": "blacksmith"
+    }
+}

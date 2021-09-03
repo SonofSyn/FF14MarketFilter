@@ -1,8 +1,8 @@
-import { collectItemData, collectItemExtras, collectItemNamesDE } from "./requests/collector";
+import { collectItemData, collectItemExtras, collectItemImages, collectItemNamesDE } from "./requests/collector";
 import { MarketableItemIDs } from "./resources/marketableItemIDs";
 import { selectItemMetrics, selectListingData } from "./processing/selector";
 import { asyncReadFile, asyncWriteFile } from "./shared/tools";
-import { ItemMetrics, ListingData, ResponseData } from "./shared/interface";
+import { ItemExtrasDictionary, ItemMetrics, ListingData, ResponseData } from "./shared/interface";
 import { requestItemImageXIVapi, requestItemNameXIVapi } from "./requests/client";
 import { MarketableItemIDsReduced } from "./resources/marketableItemsReduced";
 import { checkRetainers } from "./processing/checkRetainers";
@@ -33,8 +33,14 @@ import { retainersK, retainersN } from "./resources/retainerNames";
     // await asyncWriteFile("./export/compiledData/itemNamesDE.json", JSON.stringify(itemNameData));
     // Grab all itemExtras
     // _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-    let itemExtraData = await collectItemExtras(MarketableItemIDsReduced, 2000, 5);
-    await asyncWriteFile("./export/compiledData/itemExtras.json", JSON.stringify(itemExtraData));
+    // let itemExtraData = await collectItemExtras(MarketableItemIDsReduced, 2000, 5);
+    // await asyncWriteFile("./export/compiledData/itemExtras.json", JSON.stringify(itemExtraData));
+    // Grab all itemImages
+    // _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+    let itemExtraData = await asyncReadFile("./export/compiledData/itemExtras.json");
+    let extraItems: ItemExtrasDictionary = JSON.parse(itemExtraData.toString())
+    await collectItemImages(extraItems, 2000, 3)
+    // await asyncWriteFile("./export/compiledData/itemExtras.json", JSON.stringify(itemExtraData));
     // Load Data
     // _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
     // let listingItemData: ListingData[] = JSON.parse(
