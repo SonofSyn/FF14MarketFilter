@@ -11,6 +11,8 @@ export interface ListingData {
     id: string;
     date: string;
     name: string;
+    crafter: string;
+    itemLevel: number;
     orders: Order[];
 }
 
@@ -18,6 +20,8 @@ export interface ItemMetrics {
     id: string;
     date: string;
     name: string;
+    crafter: string;
+    itemLevel: number;
     minPriceNQ: number;
     maxPriceNQ: number;
     minPriceHQ: number;
@@ -30,6 +34,8 @@ export interface ResponseData {
     id: string;
     date: string;
     name: string;
+    crafter: string;
+    itemLevel: number;
     minPriceNQ: number;
     maxPriceNQ: number;
     minPriceHQ: number;
@@ -41,6 +47,8 @@ export interface ResponseData {
 
 export interface Retainer {
     name: string;
+    crafter: string;
+    itemLevel: number;
     retainerOrder: Order;
     undercuts: Order[];
 }
@@ -66,4 +74,8 @@ export interface ItemDictionary {
 
 export interface ItemExtrasDictionary {
     [id: string]: { name: string; icon: string; level: number; crafter: string };
+}
+
+export interface ItemExtrasReducedDictionary {
+    [id: string]: { level: number; crafter: string };
 }

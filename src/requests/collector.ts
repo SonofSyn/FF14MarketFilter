@@ -16,6 +16,7 @@ import { ItemDictionary } from "../shared/interface";
 export let collectItemData = async (
     server: Server,
     ids: number[],
+    extraDataPath: string,
     timeout: number = 3000,
     parallelRequestAmount: number = 1,
     maxPackageSize: number = 101
@@ -30,7 +31,7 @@ export let collectItemData = async (
         async (ids, ix) => {
             await sleep(timeout);
             console.log("Run " + ix);
-            let items = await requestItemsUniversalis(ids, server);
+            let items = await requestItemsUniversalis(ids, server, extraDataPath);
             if (items !== undefined) {
                 totalAmount = totalAmount + items.length;
                 let data: ResponseData[] = [];

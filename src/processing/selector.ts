@@ -17,6 +17,8 @@ export let selectItemMetrics = async (data: ResponseData[][], priceMinimum: numb
                 id: item.id,
                 date: item.date,
                 name: item.name,
+                crafter: item.crafter,
+                itemLevel: item.itemLevel,
                 minPriceNQ: item.minPriceNQ,
                 maxPriceNQ: item.maxPriceNQ,
                 minPriceHQ: item.minPriceHQ,
@@ -43,6 +45,8 @@ export let selectListingData = async (data: ResponseData[][]): Promise<ListingDa
                 id: item.id,
                 date: item.date,
                 name: item.name,
+                crafter: item.crafter,
+                itemLevel: item.itemLevel,
                 orders: item.orders,
             });
         });

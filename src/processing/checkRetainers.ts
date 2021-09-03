@@ -61,11 +61,14 @@ export let checkRetainerUndercuts = async (
  */
 export let checkRetainers = async (retainers: string[], listingData: ListingData[]): Promise<Retainer[]> => {
     let retainerListings = await checkListingsForRetainers(retainers, listingData);
-    let undercuts: { name: string; retainerOrder: Order; undercuts: Order[] }[] = [];
+    let undercuts: { name: string; crafter: string; itemLevel: number; retainerOrder: Order; undercuts: Order[] }[] =
+        [];
 
     await forEachAsync(retainerListings, async (listing) => {
         undercuts.push({
             name: listing.listing.name,
+            crafter: listing.listing.crafter,
+            itemLevel: listing.listing.itemLevel,
             retainerOrder: listing.retainerOrder,
             undercuts: await checkRetainerUndercuts(listing.listing, listing.retainerOrder, retainers),
         });

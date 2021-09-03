@@ -1,7 +1,8 @@
 import axios from "axios";
-import { Order, ResponseData, Server } from "../shared/interface";
+import { ItemExtrasDictionary, Order, ResponseData, Server } from "../shared/interface";
 import { ItemDictionaryGER } from "../resources/itemNamesGER";
-import { asyncWriteFile, forEachAsync } from "../shared/tools";
+import { asyncReadFile, asyncWriteFile, forEachAsync } from "../shared/tools";
+import { extraData } from "../resources/extraItems";
 /** universalis
  * Sends and https request for up to 101 given items
  *
@@ -9,7 +10,11 @@ import { asyncWriteFile, forEachAsync } from "../shared/tools";
  * @param {Server} server
  * @return {*}  {Promise<(ResponseData)[]>}
  */
-export let requestItemsUniversalis = async (itemIDs: number[], server: Server): Promise<ResponseData[]> => {
+export let requestItemsUniversalis = async (
+    itemIDs: number[],
+    server: Server,
+    extraDataPath: string
+): Promise<ResponseData[]> => {
     const response = await axios({
         method: "get",
         url: "https://universalis.app/api/" + server + "/" + itemIDs.join(","),
@@ -48,6 +53,8 @@ export let requestItemsUniversalis = async (itemIDs: number[], server: Server): 
             amountNQListings: amountNQOrders,
             amountHQListing: amountHQOrders,
             orders: orders,
+            itemLevel: extraData[item.itemID].level,
+            crafter: extraData[item.itemID].crafter,
         };
 
         return responseItem;
