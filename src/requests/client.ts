@@ -13,7 +13,6 @@ import { extraData } from "../resources/extraItems";
 export let requestItemsUniversalis = async (
     itemIDs: number[],
     server: Server,
-    extraDataPath: string
 ): Promise<ResponseData[]> => {
     const response = await axios({
         method: "get",
